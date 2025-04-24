@@ -7,7 +7,7 @@
 
 #include "gapcom_impl.h"
 
-static USART_HandleTypeDef *husart2_handle;
+static UART_HandleTypeDef *huart2_handle;
 
 static gapcom_handle_t *gapcom_handle_instance;
 
@@ -23,7 +23,7 @@ int open_sender(gapcom_sender_t *self)
 
 ssize_t send_sender(gapcom_sender_t *self, const uint8_t *buf, size_t len)
 {
-	HAL_StatusTypeDef status = HAL_USART_Transmit_IT(husart2_handle, buf, len);
+	HAL_StatusTypeDef status = HAL_UART_Transmit_IT(huart2_handle, buf, len);
     if (status == HAL_OK) {
         return (ssize_t)len;
     } else {
@@ -36,9 +36,9 @@ gapcom_sender_t gapcom_sender_t_impl = {
 		.send = send_sender
 };
 
-void create_gapcom_instance(USART_HandleTypeDef *handle)
+void create_gapcom_instance(UART_HandleTypeDef *handle)
 {
-	husart2_handle = handle;
+	huart2_handle = handle;
 	gapcom_handle_instance = gapcom_create();
 	gapcom_set_sender_impl(gapcom_handle_instance, &gapcom_sender_t_impl);
 }

@@ -15,7 +15,7 @@
 #include "gapcom/gapcom_server.h"
 #include "main.h"
 
-void create_gapcom_instance(USART_HandleTypeDef *husart2_handle);
+void create_gapcom_instance(UART_HandleTypeDef *huart2_handle);
 
 void receive_gapcom_incoming_uart_message(uint8_t *buf, uint16_t size);
 

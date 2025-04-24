@@ -41,16 +41,11 @@ void create_gapcom_instance(UART_HandleTypeDef *handle)
 	huart2_handle = handle;
 	gapcom_handle_instance = gapcom_create();
 	gapcom_set_sender_impl(gapcom_handle_instance, &gapcom_sender_t_impl);
+	gapcom_install_callback(gapcom_handle_instance, cmd_ping_callback,GAPCOM_MSG_MIN);
 }
 
 void receive_gapcom_incoming_uart_message(uint8_t *buf, uint16_t size)
 {
 	gapcom_accept(gapcom_handle_instance, buf, size);
-	gapcom_respond_ping(gapcom_handle_instance, GAPErrorCode_GAP_OK);
-}
-
-void send_respond_ping()
-{
-	gapcom_respond_ping(gapcom_handle_instance, GAPErrorCode_GAP_OK);
 }
 

@@ -2,5 +2,4 @@
 ../Core/Src/gapcom_impl.c:19:5:open_sender	1
 ../Core/Src/gapcom_impl.c:24:9:send_sender	2
 ../Core/Src/gapcom_impl.c:39:6:create_gapcom_instance	1
-../Core/Src/gapcom_impl.c:46:6:receive_gapcom_incoming_uart_message	1
-../Core/Src/gapcom_impl.c:52:6:send_respond_ping	1
+../Core/Src/gapcom_impl.c:47:6:receive_gapcom_incoming_uart_message	1

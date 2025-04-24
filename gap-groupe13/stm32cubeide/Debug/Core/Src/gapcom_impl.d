@@ -10,7 +10,8 @@ Core/Src/gapcom_impl.o: ../Core/Src/gapcom_impl.c \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom_server.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/gap.pb.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/pb.h \
- ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+ ../Core/Inc/gapcli_cmd_callback.h ../Core/Inc/main.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -48,6 +49,7 @@ Core/Src/gapcom_impl.o: ../Core/Src/gapcom_impl.c \
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom_server.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/gap.pb.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/pb.h:
+../Core/Inc/gapcli_cmd_callback.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:

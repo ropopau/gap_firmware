@@ -1,0 +1,1 @@
+/usr/bin/cc -Wall -Wextra -Wswitch-default -Wswitch-enum -Og -g3 CMakeFiles/gapcli.dir/src/gapcli.c.o CMakeFiles/gapcli.dir/src/communicator_impl_uart_client_linux.c.o -o gapcli  -Wl,-whole-archive ../gap-com/libgapcom.a -Wl,-no-whole-archive libgap-agents-common.a ../gap-tinyframe/libgaptinyframe.a 

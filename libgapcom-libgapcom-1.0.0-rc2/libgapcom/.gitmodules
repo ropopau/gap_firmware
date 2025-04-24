@@ -1,0 +1,8 @@
+[submodule "nanopb"]
+	path = nanopb
+	url = https://github.com/nanopb/nanopb.git
+	branch = master
+[submodule "TinyFrame"]
+	path = TinyFrame
+	url = https://github.com/MightyPork/TinyFrame.git
+	branch = master

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libgaptinyframe.a CMakeFiles/gaptinyframe.dir/__/TinyFrame/TinyFrame.c.o
+/usr/bin/ranlib libgaptinyframe.a

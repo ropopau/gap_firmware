@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+/*************
+ *** TYPES ***
+ *************/
+
+enum GAPErrorCode {
+    GAP_OK = 0;
+    GAP_FEATURE_NOT_IMPLEMENTED = 1;
+    GAP_INVALID_LOG_VERBOSITY = 2;
+    GAP_INVALID_VERSION_FORMAT = 3;
+}
+
+enum GAPSelftestCode {
+    GAP_SELFTEST_OK = 0;
+    GAP_SELFTEST_FLASH_FAILED_TO_READ = 1;
+    GAP_SELFTEST_FLASH_FAILED_TO_WRITE = 2;
+    GAP_SELFTEST_FLASH_READ_BACK_IS_DIFFERENT = 3;
+    GAP_SELFTEST_UART_DEBUG_NOK = 4;
+    GAP_SELFTEST_UART_INFO_NOK = 5;
+    GAP_SELFTEST_UART_WARNING_NOK = 6;
+    GAP_SELFTEST_UART_ERROR_NOK = 7;
+    GAP_SELFTEST_GYROSCOPE_X_NOK = 8;
+    GAP_SELFTEST_GYROSCOPE_Y_NOK = 9;
+    GAP_SELFTEST_GYROSCOPE_Z_NOK = 10;
+    GAP_SELTEST_LED_GREEN_NOK = 11;
+    GAP_SELTEST_LED_RED_NOK = 12;
+}
+
+enum GAPLogVerbosity {
+    GAP_LOG_DEBUG = 0;
+    GAP_LOG_INFO = 1;
+    GAP_LOG_WARNING = 2;
+    GAP_LOG_ERROR = 3;
+}
+
+/****************************
+ *** REQUESTS / RESPONSES ***
+ ****************************/
+
+message GAPPingReq {}
+
+message GAPPingResp {
+    GAPErrorCode error_code = 1;
+}
+
+message GAPSetLogVerbosityReq {
+    GAPLogVerbosity verbosity = 1;
+}
+
+message GAPSetLogVerbosityResp {
+    GAPErrorCode error_code = 1;
+}
+
+message GAPSetGyroscopeReq {
+    bool set = 1;
+}
+
+message GAPSetGyroscopeResp {
+    GAPErrorCode error_code = 1;
+}
+
+message GAPSetVersionReq {
+    string version = 1;
+}
+
+message GAPSetVersionResp {
+    GAPErrorCode error_code = 1;
+}
+
+message GAPGetVersionReq {}
+
+message GAPGetVersionResp {
+    GAPErrorCode error_code = 1;
+    string version = 2;
+}
+
+message GAPSelftestReq {}
+
+message GAPSelftestResp {
+    GAPErrorCode error_code = 1;
+    GAPSelftestCode flash_test_code = 2;
+    GAPSelftestCode debuguart_test_code = 3;
+    GAPSelftestCode gyroscope_test_code = 4;
+    GAPSelftestCode led_test_code = 5;
+}
+
+message GAPPowerSaveModeReq {
+    bool save_power = 1;
+}
+
+message GAPPowerSaveModeResp {
+    GAPErrorCode error_code = 1;
+}

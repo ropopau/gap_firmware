@@ -1,0 +1,98 @@
+#! /bin/bash
+
+if (( $# != 2 )); then
+    echo "Usage: generate_libgapcom_full_src_archive <root_src_dir> <root_bin_dir>"
+    exit 1
+fi
+
+VERSION=${1} && shift
+ROOT_SRC_PATH=${1} && shift
+ROOT_BIN_PATH=${1} && shift
+
+DIR_PATH=gapcom-full-src
+RAR_PATH=gapcom-full-src_${VERSION}.rar
+
+mkdir ${DIR_PATH}
+cd ${DIR_PATH}
+
+### Copy source code (static + generated)
+#########################################
+
+# Put every TinyFrame sources (OSS + our TF_Config.h) in a single dir.
+mkdir -p TinyFrame
+cp ${ROOT_SRC_PATH}/TinyFrame/TinyFrame.c TinyFrame/
+cp ${ROOT_SRC_PATH}/TinyFrame/TinyFrame.h TinyFrame/
+cp ${ROOT_SRC_PATH}/gap-tinyframe/include/TF_Config.h TinyFrame/
+# Put every nanopb sources (OSS) in a single dir.
+mkdir -p nanopb
+cp ${ROOT_SRC_PATH}/nanopb/*.c nanopb/
+cp ${ROOT_SRC_PATH}/nanopb/*.h nanopb/
+# Put every gap-com sources (static + generated) in a single dir.
+# We keep the separation between public and private headers.
+mkdir -p gap-com/src
+mkdir -p gap-com/include
+cp ${ROOT_SRC_PATH}/gap-com/src/*.c gapcom/src/
+cp ${ROOT_SRC_PATH}/gapcom/src/*.h gapcom/src/
+cp -r ${ROOT_SRC_PATH}/gapcom/include/* gapcom/include/
+cp ${ROOT_BIN_PATH}/gapcom/gap.pb.h gapcom/include/
+cp ${ROOT_BIN_PATH}/gapcom/gap.pb.c gapcom/src/
+
+### Generate trivial test program
+#################################
+
+cat >test.c <<'EOF'
+#include <stdio.h>
+
+#include <gap.pb.h>
+#include <gapcom/gapcom.h>
+#include <gapcom/gapcom_server.h>
+
+int main(int argc, char *argv[])
+{
+	(void)argc; // Unused
+	(void)argv; // Unused
+
+	gapcom_handle_t *handle = gapcom_create();
+	if (handle) {
+		puts("OK - Creating libgapcom session");
+		gapcom_destroy(handle);
+		return 0;
+	} else {
+		puts("NOK - Creating libgapcom session");
+		return 1;
+	}
+}
+EOF
+
+### Generate single Makefile
+############################
+
+cat >Makefile <<'EOF'
+AR ?= ar
+CC ?= gcc
+CFLAGS ?= -Wall -Wextra -Werror -Os
+
+GAPCOM_SRC := \
+	$(wildcard gapcom/src/*.c) \
+	$(wildcard nanopb/*.c) \
+	$(wildcard TinyFrame/*.c)
+GAPCOM_OBJ := $(patsubst %.c,%.o,$(GAPCOM_SRC))
+GAPCOM_INC := \
+	gapcom/include \
+	nanopb \
+	TinyFrame
+CFLAGS += $(addprefix -I,$(GAPCOM_INC))
+
+all: test.out libgapcom.a
+
+libgapcom.a: $(GAPCOM_OBJ)
+	ar rcs $@ $^
+
+test.out: libgapcom.a
+	$(CC) $(CFLAGS) test.c -o $@ $<
+EOF
+
+cd -
+rar a ${RAR_PATH} ${DIR_PATH}
+
+rm -rf ${DIR_PATH}

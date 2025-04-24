@@ -1,0 +1,2 @@
+/usr/bin/ar qc libgap-agents-common.a "CMakeFiles/gap-agents-common.dir/src/options.c.o"
+/usr/bin/ranlib libgap-agents-common.a

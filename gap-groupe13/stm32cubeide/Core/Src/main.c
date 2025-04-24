@@ -56,7 +56,7 @@ static void MX_USART2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint8_t rx_buff[1024];
 /* USER CODE END 0 */
 
 /**
@@ -76,7 +76,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  gapcom_handle_instance = gapcom_create();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -90,6 +90,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_Init();
   /* USER CODE BEGIN 2 */
+  create_gapcom_instance(&husart2);
 
   /* USER CODE END 2 */
 
@@ -97,8 +98,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if (HAL_USART_Receive(&husart2, rx_buff, 6, 1000000) == HAL_OK) {
+		  send_respond_ping();
+	  }
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -198,12 +201,15 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
-uint8_t rx_buff[10];
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(USART_HandleTypeDef *huart)
 {
-	HAL_USART_Receive_IT(huart, rx_buff, 10);
-	HAL_USART_Transmit_IT(huart, rx_buff, 10);
+
+	uint8_t buf[] = "hello";
+	HAL_USART_Transmit_IT(&husart2, buf, 6);
+	//send_respond_ping();
+	//receive_gapcom_incoming_uart_message(rx_buff, 6);
+	HAL_USART_Receive_IT(&husart2, rx_buff, 6);
 
 }
 /* USER CODE END 4 */

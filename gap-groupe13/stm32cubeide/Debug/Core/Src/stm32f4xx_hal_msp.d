@@ -25,11 +25,18 @@ Core/Src/stm32f4xx_hal_msp.o: ../Core/Src/stm32f4xx_hal_msp.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h \
+ ../Core/Inc/gapcom_impl.h \
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/communicator.h \
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/communicator_impl_server.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom_core.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/TinyFrame/TinyFrame.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/TinyFrame/TF_Config.h \
  /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom.h \
- /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom.h
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom.h \
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom_server.h \
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/gap.pb.h \
+ /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/pb.h \
+ ../Core/Inc/main.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -57,8 +64,15 @@ Core/Src/stm32f4xx_hal_msp.o: ../Core/Src/stm32f4xx_hal_msp.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_usart.h:
+../Core/Inc/gapcom_impl.h:
+/home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/communicator.h:
+/home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/communicator_impl_server.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom_core.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/TinyFrame/TinyFrame.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/TinyFrame/TF_Config.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom.h:
 /home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom.h:
+/home/valentin/GISTRE/2025/ARM/libgapcom/Inc/gapcom/gapcom/gapcom_server.h:
+/home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/gap.pb.h:
+/home/valentin/GISTRE/2025/ARM/libgapcom/Inc/nanopb/pb.h:
+../Core/Inc/main.h:

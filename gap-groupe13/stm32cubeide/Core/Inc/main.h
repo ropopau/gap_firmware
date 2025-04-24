@@ -31,8 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "gapcom_core.h"
-#include "gapcom/gapcom.h"
+#include "gapcom_impl.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -61,7 +61,7 @@ main-build: gap_project.elf secondary-outputs
 
 # Tool invocations
 gap_project.elf gap_project.map: $(OBJS) $(USER_OBJS) /home/valentin/GISTRE/2025/ARM/armproject/gap-groupe13/stm32cubeide/STM32F401RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "gap_project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/valentin/GISTRE/2025/ARM/armproject/gap-groupe13/stm32cubeide/STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="gap_project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "gap_project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/valentin/GISTRE/2025/ARM/armproject/gap-groupe13/stm32cubeide/STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="gap_project.map" -Wl,--gc-sections -static -L"/home/valentin/GISTRE/2025/ARM/libgapcom/Debug" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

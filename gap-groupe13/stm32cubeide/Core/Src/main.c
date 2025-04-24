@@ -43,7 +43,7 @@
 USART_HandleTypeDef husart2;
 
 /* USER CODE BEGIN PV */
-
+gapcom_handle_t *gapcom_handle_instance;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,7 +76,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  gapcom_handle_instance = gapcom_create();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -202,8 +202,8 @@ uint8_t rx_buff[10];
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(USART_HandleTypeDef *huart)
 {
-	HAL_USART_Receive_IT(&huart, rx_buff, 10);
-	HAL_USART_Transmit_IT(&huart, rx_buff, 10);
+	HAL_USART_Receive_IT(huart, rx_buff, 10);
+	HAL_USART_Transmit_IT(huart, rx_buff, 10);
 
 }
 /* USER CODE END 4 */

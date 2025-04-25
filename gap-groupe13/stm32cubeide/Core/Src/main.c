@@ -93,8 +93,10 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  create_gapcom_instance(&huart2);
-  HAL_UART_Receive_IT(&huart2, rx_buff, 6);
+  create_gapcom_instance(&huart6);
+  HAL_UART_Receive_IT(&huart6, rx_buff, 6);
+  init_log(&huart2);
+  send_log(VERBOSITY_INFO, "GAP system booted");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -165,10 +167,10 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
-  huart2.Init.WordLength = UART_WORDLENGTH_9B;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_EVEN;
+  huart2.Init.Parity = UART_PARITY_NONE;
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -199,9 +201,9 @@ static void MX_USART6_UART_Init(void)
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
   huart6.Init.BaudRate = 9600;
-  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.WordLength = UART_WORDLENGTH_9B;
   huart6.Init.StopBits = UART_STOPBITS_1;
-  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Parity = UART_PARITY_EVEN;
   huart6.Init.Mode = UART_MODE_TX_RX;
   huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart6.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -249,7 +251,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	HAL_UART_Receive_IT(&huart2, rx_buff, 6);
+	HAL_UART_Receive_IT(&huart6, rx_buff, 6);
 	receive_gapcom_incoming_uart_message(rx_buff, 6);
 
 

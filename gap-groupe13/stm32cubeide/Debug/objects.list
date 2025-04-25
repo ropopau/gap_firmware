@@ -1,5 +1,7 @@
 "./Core/Src/gapcli_cmd_callback.o"
+"./Core/Src/gapcom_fsm.o"
 "./Core/Src/gapcom_impl.o"
+"./Core/Src/log_manager.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"

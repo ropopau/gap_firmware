@@ -10,10 +10,16 @@
 
 UART_HandleTypeDef *huart_handler;
 
+//static char buf[1024];
+
 void init_log(UART_HandleTypeDef *huart)
 {
 	huart_handler = huart;
 }
+
+static char buf[1024];
+
+
 
 void send_log(enum VERBOSITY_LEVEL verbosity, const char *message)
 {
@@ -30,7 +36,7 @@ void send_log(enum VERBOSITY_LEVEL verbosity, const char *message)
 	{
 		level = "[Error]";
 	}
-	char buf[1024];
+
 	sprintf(buf, "%s %s\r\n", level, message);
-	HAL_UART_Transmit_IT(huart_handler, (uint8_t*)buf, strlen(buf));
+	HAL_UART_Transmit(huart_handler, (uint8_t*)buf, strlen(level) + strlen(message) + 3, HAL_MAX_DELAY);
 }

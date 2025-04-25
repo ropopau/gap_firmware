@@ -1,0 +1,2 @@
+../Core/Src/gapcom_fsm.c:17:6:gapcom_uart_fsm_init	1
+../Core/Src/gapcom_fsm.c:25:6:gapcom_uart_fsm_rx_callback	2

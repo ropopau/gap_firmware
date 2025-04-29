@@ -1,2 +1,0 @@
-../Core/Src/gapcli_cmd_callback.c:11:6:cmd_ping_callback	16	static
-../Core/Src/gapcli_cmd_callback.c:16:6:cmd_setverbosity_callback	16	static

@@ -1,5 +1,0 @@
-../Core/Src/gapcom_impl.c:14:5:close_sender	16	static
-../Core/Src/gapcom_impl.c:19:5:open_sender	16	static
-../Core/Src/gapcom_impl.c:24:9:send_sender	32	static
-../Core/Src/gapcom_impl.c:39:6:create_gapcom_instance	16	static
-../Core/Src/gapcom_impl.c:49:6:receive_gapcom_incoming_uart_message	16	static

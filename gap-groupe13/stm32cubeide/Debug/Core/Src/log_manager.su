@@ -1,2 +1,0 @@
-../Core/Src/log_manager.c:15:6:init_log	16	static
-../Core/Src/log_manager.c:24:6:send_log	32	static

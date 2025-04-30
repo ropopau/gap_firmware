@@ -1,5 +1,0 @@
-../Core/Src/gapcom_impl.c:14:5:close_sender	1
-../Core/Src/gapcom_impl.c:19:5:open_sender	1
-../Core/Src/gapcom_impl.c:24:9:send_sender	2
-../Core/Src/gapcom_impl.c:39:6:create_gapcom_instance	1
-../Core/Src/gapcom_impl.c:49:6:receive_gapcom_incoming_uart_message	1

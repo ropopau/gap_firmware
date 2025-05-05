@@ -8,6 +8,8 @@
 #ifndef SRC_GAPCLI_CMD_CALLBACK_H_
 #define SRC_GAPCLI_CMD_CALLBACK_H_
 
+#include <stdbool.h>
+
 #include "main.h"
 #include "gapcom_core.h"
 #include "gapcom/gapcom.h"

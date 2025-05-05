@@ -12,7 +12,7 @@ static gapcom_handle_t *gapcom_handle_instance;
 static fsm_state_t fsm_state = FSM_HEADER;
 static char header_buf[11];
 static char payload_buf[1024];
-static int expected_payload_size = 0;
+static uint16_t expected_payload_size = 0;
 
 void gapcom_uart_fsm_init(UART_HandleTypeDef *huart, gapcom_handle_t *gapcom_handle)
 {
@@ -30,7 +30,6 @@ void gapcom_uart_fsm_rx_callback()
 		 expected_payload_size = len + GAPCOM_CRC_SIZE;
 		 fsm_state = FSM_PAYLOAD;
 		 HAL_UART_Receive_IT(gapcom_uart, (uint8_t*)payload_buf, expected_payload_size);
-		 send_log(VERBOSITY_INFO, payload_buf);
 	}
 	else
 	{

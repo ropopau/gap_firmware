@@ -34,6 +34,7 @@ extern "C" {
 #include "gapcom_impl.h"
 #include "log_manager.h"
 #include "gapcom_fsm.h"
+#include "mpu60x0.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

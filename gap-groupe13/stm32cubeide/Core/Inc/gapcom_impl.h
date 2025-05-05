@@ -18,7 +18,5 @@
 
 void create_gapcom_instance(UART_HandleTypeDef *huart2_handle);
 
-void receive_gapcom_incoming_uart_message(uint8_t *buf, uint16_t size);
-
 
 #endif /* SRC_GAPCOM_IMPL_H_ */

@@ -20,6 +20,6 @@
 
 HAL_StatusTypeDef init_mpu(I2C_HandleTypeDef *I2C_handler);
 
-int set_gyroscope();
+HAL_StatusTypeDef set_gyroscope();
 
 #endif /* SRC_MPU60X0_H_ */

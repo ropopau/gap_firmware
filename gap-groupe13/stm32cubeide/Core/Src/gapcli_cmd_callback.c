@@ -22,6 +22,7 @@ void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 void cmd_setgyroscope_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
+	send_log(VERBOSITY_DEBUG, "gyroscope");
 	set_gyroscope();
 	gapcom_respond_set_gyroscope(handle, GAPErrorCode_GAP_OK);
 }

@@ -17,7 +17,7 @@ void init_mpu(I2C_HandleTypeDef *I2C_handler)
 	uint8_t reset = 0x80;
 	//RESET MPU
 	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
-	HAL_Delay(100);
+	HAL_Delay(200);
 }
 
 HAL_StatusTypeDef set_gyroscope()
@@ -27,119 +27,142 @@ HAL_StatusTypeDef set_gyroscope()
 }
 
 
+// MPU6050 FIFO-specific fix
+// This approach focuses on the minimal necessary configuration to get the FIFO working
+
 HAL_StatusTypeDef config_mpu() {
     uint8_t data;
     HAL_StatusTypeDef status;
 
-    // 1. Verify the device is responding
-    if (HAL_I2C_IsDeviceReady(I2C_handler_instance, MPU6050_ADDR, 3, WAIT_WRITE_MPU_TIME) != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "MPU6050 not responding, check connection");
-        return HAL_ERROR;
-    }
+    // Wait for reset to complete - this is critical
+    HAL_Delay(200);
 
-    send_log(VERBOSITY_DEBUG, "MPU6050 device ready");
-
-    // 2. Reset the device completely
-    data = 0x80;  // Reset bit
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to reset MPU6050");
-        return status;
-    }
-
-    // Wait for reset to complete
-    HAL_Delay(100);
-
-    // 3. Wake up the device (clear sleep bit)
-    data = 0x01;  // Set clock source to PLL with X-axis gyro reference
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to wake up MPU6050");
-        return status;
-    }
-    HAL_Delay(50);
-
-    // Verify the device ID
+    // 2. Check the device ID to verify communication
     uint8_t id;
     status = HAL_I2C_Mem_Read(I2C_handler_instance, MPU6050_ADDR, 0x75, 1, &id, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK || id != 0x68) {
-        send_log(VERBOSITY_ERROR, "Invalid device ID or read failure");
+    if (status != HAL_OK) {
+        send_log(VERBOSITY_ERROR, "Failed to read WHO_AM_I register");
+        return status;
+    }
+
+    if (id != 0x68) {
+        send_log(VERBOSITY_ERROR, "Invalid device ID: 0x%02X, expected 0x68");
         return HAL_ERROR;
     }
 
-    send_log(VERBOSITY_DEBUG, "MPU6050 ID verified");
+    send_log(VERBOSITY_DEBUG, "MPU6050 ID verified: 0x68");
 
-    // 4. Configure sample rate divider
-    data = 9;  // 100Hz (1000Hz / (1+9) = 100Hz)
+    // 3. Wake up by clearing the sleep bit and setting clock source
+    data = 0x01;  // Clear sleep bit (bit 6) and set clock source to PLL with X-axis gyro reference
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK) {
+        send_log(VERBOSITY_ERROR, "Failed to wake up device");
+        return status;
+    }
+    HAL_Delay(1000);
+
+    // 4. Verify that sleep mode is disabled by reading the register back
+    status = HAL_I2C_Mem_Read(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK || (data & 0x40)) {  // Check bit 6 (sleep bit)
+        send_log(VERBOSITY_ERROR, "Device still in sleep mode");
+        return HAL_ERROR;
+    }
+
+    // 5. Set sample rate to 100Hz (1kHz / (1+9))
+    data = 9;
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to set sample rate");
         return status;
     }
+    HAL_Delay(1000);
 
-    // 5. Configure DLPF
-    data = 0x02;  // 94Hz bandwidth, 3ms delay
+    // 6. Configure digital low pass filter
+    data = 0x03;  // ~42Hz bandwidth
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, CONFIG_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to configure DLPF");
         return status;
     }
+    HAL_Delay(1000);
 
-    // 6. Configure gyroscope range to ±250°/s
+    // 7. Configure gyroscope (±250°/s)
     data = 0x00;
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, GYRO_CONFIG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to configure gyroscope range");
+        send_log(VERBOSITY_ERROR, "Failed to configure gyroscope");
         return status;
     }
+    HAL_Delay(1000);
 
-    // 7. Disable accelerometer by putting it to standby
-    data = 0x38;  // Disable XA, YA, ZA accelerometer
+    // 8. Disable accelerometer to save power and potentially reduce conflicts
+    data = 0x38;  // Set standby bits for all accelerometer axes
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_2, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to disable accelerometer");
         return status;
     }
+    HAL_Delay(1000);
 
-    // 8. Prepare for FIFO operation - first disable everything
-    data = 0x00;
+    // CRITICAL: The following order for FIFO setup is important
+
+    // 9. Disable FIFO
+    data = 0x00;  // Disable FIFO, I2C master, etc.
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to clear USER_CTRL");
+        send_log(VERBOSITY_ERROR, "Failed to disable FIFO");
         return status;
     }
-    HAL_Delay(50);
+    HAL_Delay(1000);
 
-    // 9. Reset FIFO
-    data = 0x04;  // Reset FIFO
+    // 10. Reset FIFO
+    data = 0x04;  // FIFO reset bit
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to reset FIFO");
         return status;
     }
-    HAL_Delay(50);
+    HAL_Delay(1000);
 
-    // 10. Enable FIFO operation
-    data = 0x40;  // Enable FIFO
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to enable FIFO");
-        return status;
-    }
-
-    // 11. Configure which data to store in FIFO
-    data = 0x70;  // Store gyro data (XG_FIFO_EN | YG_FIFO_EN | ZG_FIFO_EN)
+    // 11. Clear the FIFO configuration register
+    data = 0x00;
     status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, FIFO_EN_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to configure FIFO data selection");
+        send_log(VERBOSITY_ERROR, "Failed to clear FIFO_EN register");
         return status;
     }
+    HAL_Delay(1000);
 
-    send_log(VERBOSITY_INFO, "MPU6050 configuration complete - FIFO enabled for gyroscope data");
+    // 11. Set FIFO_EN to gyro bits
+    data = 0x70;  // XG, YG, ZG
+    HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, FIFO_EN_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+
+    // 12. Enable FIFO operation
+    data = 0x40;
+    HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+
+    HAL_Delay(1000);
+
+    // 14. Verify the FIFO is enabled by reading back registers
+    status = HAL_I2C_Mem_Read(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK || !(data & 0x40)) {
+        send_log(VERBOSITY_ERROR, "FIFO not enabled in USER_CTRL");
+        return HAL_ERROR;
+    }
+    HAL_Delay(1000);
+
+    status = HAL_I2C_Mem_Read(I2C_handler_instance, MPU6050_ADDR, FIFO_EN_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK || data != 0x70) {
+        send_log(VERBOSITY_ERROR, "FIFO_EN register mismatch, got 0x%02X, expected 0x70");
+        return HAL_ERROR;
+    }
+    HAL_Delay(1000);
+
+    send_log(VERBOSITY_INFO, "MPU6050 FIFO configured successfully");
     is_active = true;
 
-    // Wait for FIFO to fill with some data
-    HAL_Delay(500);
+    // Wait for FIFO to start filling
+    HAL_Delay(1000);
 
     return HAL_OK;
 }
@@ -189,7 +212,7 @@ void read_fifo() {
 
     // If FIFO count is zero or too small, wait for more data
     if (fifo_count < 6) {
-        send_log(VERBOSITY_DEBUG, "Waiting for more data in FIFO");
+       send_log(VERBOSITY_DEBUG, "Waiting for more data in FIFO");
 
         // Try reading gyro registers directly as a test
         uint8_t raw_gyro[6];

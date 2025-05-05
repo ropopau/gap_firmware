@@ -27,14 +27,24 @@ void gapcom_uart_fsm_rx_callback()
 	if (fsm_state == FSM_HEADER)
 	{
 		 uint16_t len = (header_buf[5] << 8) | header_buf[6];
-		 expected_payload_size = len + GAPCOM_CRC_SIZE;
 		 fsm_state = FSM_PAYLOAD;
+		 expected_payload_size = len + GAPCOM_CRC_SIZE;
+		 if (len != 0)
+		 {
+			 expected_payload_size += GAPCOM_CRC_FOOTER_SIZE; // IF PAYLOAD ISN'T EMPTY, WE HAD THE FOOTER CHECKSUM
+		 }
 		 HAL_UART_Receive_IT(gapcom_uart, (uint8_t*)payload_buf, expected_payload_size);
 	}
 	else
 	{
-		 gapcom_accept(gapcom_handle_instance, (uint8_t*)header_buf, GAPCOM_HEADER_SIZE);
-		 gapcom_accept(gapcom_handle_instance, (uint8_t*)payload_buf, expected_payload_size);
+		 char total_buf[1035];
+		 memcpy(total_buf, header_buf, GAPCOM_HEADER_SIZE);
+		 memcpy(total_buf + GAPCOM_HEADER_SIZE, payload_buf, expected_payload_size);
+		 size_t total_size = GAPCOM_HEADER_SIZE + expected_payload_size;
+		 char buf[1024];
+		 sprintf(buf, "%d", total_size);
+		 send_log(VERBOSITY_DEBUG, buf);
+		 gapcom_accept(gapcom_handle_instance, (uint8_t*)total_buf, total_size);
 		 fsm_state = FSM_HEADER;
 		 HAL_UART_Receive_IT(gapcom_uart, (uint8_t*)header_buf, GAPCOM_HEADER_SIZE);
 	}

@@ -56,7 +56,17 @@ void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 void cmd_setgyroscope_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
-	send_log(VERBOSITY_DEBUG, "gyroscope");
-	//set_gyroscope();
+	bool* is_set_gyroscope_addr = (bool*)proto_msg;
+
+	if (*is_set_gyroscope_addr == true)
+	{
+		send_log(VERBOSITY_DEBUG, "gyroscope set");
+		set_gyroscope();
+	}
+	else
+	{
+		send_log(VERBOSITY_DEBUG, "gyroscope unset");
+		unset_gyroscope();
+	}
 	gapcom_respond_set_gyroscope(handle, GAPErrorCode_GAP_OK);
 }

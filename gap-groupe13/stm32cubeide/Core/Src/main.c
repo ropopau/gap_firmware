@@ -112,7 +112,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //HAL_UART_Transmit(&huart2, (uint8_t*)"hello", 5, HAL_MAX_DELAY);
+	  read_fifo();
+	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }

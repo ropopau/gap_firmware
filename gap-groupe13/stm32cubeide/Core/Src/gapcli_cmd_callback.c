@@ -50,7 +50,25 @@ void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 	gapcom_respond_get_version(handle, GAPErrorCode_GAP_OK, version);
 
+
 }
+
+
+void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
+{
+
+	send_log(VERBOSITY_INFO, "selftest request received");
+	char version[16];
+	get_version(version);
+
+	GAPSelftestCode debuguart_res = test_uart_log_verbosity();
+
+	gapcom_respond_selftest(handle, GAPErrorCode_GAP_OK, 0, debuguart_res, 0, 0);
+
+	send_log(VERBOSITY_INFO, "Selftest ended. Look at the control console to view results.");
+}
+
+
 
 
 

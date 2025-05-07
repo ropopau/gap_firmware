@@ -54,6 +54,7 @@ void create_gapcom_instance(UART_HandleTypeDef *handle)
 
 	gapcom_install_callback(gapcom_handle_instance, cmd_setversion_callback, GAPCOM_MSG_SET_VERSION_REQ);
 	gapcom_install_callback(gapcom_handle_instance, cmd_getversion_callback, GAPCOM_MSG_GET_VERSION_REQ);
+	gapcom_install_callback(gapcom_handle_instance, cmd_selftest_callback, GAPCOM_MSG_SELFTEST_REQ);
 
 
 	gapcom_install_callback(gapcom_handle_instance, cmd_setgyroscope_callback, GAPCOM_MSG_SET_GYROSCOPE_REQ);

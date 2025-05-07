@@ -24,5 +24,8 @@ void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg);
 
 void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg);
 
+void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg);
+
+
 void cmd_setgyroscope_callback(gapcom_handle_t *handle, const void *proto_msg);
 #endif /* SRC_GAPCLI_CMD_CALLBACK_H_ */

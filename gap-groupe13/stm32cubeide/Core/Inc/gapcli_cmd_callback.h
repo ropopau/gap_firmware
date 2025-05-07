@@ -14,8 +14,15 @@
 #include "gapcom_core.h"
 #include "gapcom/gapcom.h"
 #include "gapcom/gapcom_server.h"
+#include "version.h"
+#include "log_manager.h"
+
 
 void cmd_ping_callback(gapcom_handle_t *handle, const void *proto_msg);
 void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg);
+void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg);
+
+void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg);
+
 void cmd_setgyroscope_callback(gapcom_handle_t *handle, const void *proto_msg);
 #endif /* SRC_GAPCLI_CMD_CALLBACK_H_ */

@@ -29,17 +29,14 @@ void change_verbosity(enum VERBOSITY_LEVEL verbosity) {
 	}
 	else{
 		send_log(
-						VERBOSITY_INFO,
-						"Verbosity has changed from %s to %s",
-						verbosity_strings[current_verbosity],
-						verbosity_strings[verbosity]
-						);
+			VERBOSITY_INFO,
+			"Verbosity has changed from %s to %s",
+			verbosity_strings[current_verbosity],
+			verbosity_strings[verbosity]
+		);
 		current_verbosity = verbosity;
 
 	}
-
-
-
 
 }
 
@@ -57,9 +54,7 @@ void send_log(enum VERBOSITY_LEVEL verbosity, const char *message, ...)
     va_start(args, message);
 
     vsnprintf(formatted, sizeof(formatted), message, args);
-
     va_end(args);
-
     sprintf(buf, "[%s] %s\r\n", level, formatted);
 
     HAL_UART_Transmit(huart_handler, (uint8_t*)buf, strlen(buf), HAL_MAX_DELAY);

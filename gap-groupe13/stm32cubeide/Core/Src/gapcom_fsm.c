@@ -43,7 +43,6 @@ void gapcom_uart_fsm_rx_callback()
 		 size_t total_size = GAPCOM_HEADER_SIZE + expected_payload_size;
 		 char buf[1024];
 		 sprintf(buf, "%d", total_size);
-		 send_log(VERBOSITY_DEBUG, buf);
 		 gapcom_accept(gapcom_handle_instance, (uint8_t*)total_buf, total_size);
 		 fsm_state = FSM_HEADER;
 		 HAL_UART_Receive_IT(gapcom_uart, (uint8_t*)header_buf, GAPCOM_HEADER_SIZE);

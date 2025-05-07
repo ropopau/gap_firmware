@@ -9,6 +9,9 @@
 #define SRC_LOG_MANAGER_H_
 
 #include "main.h"
+#include <stdarg.h>
+
+
 
 enum VERBOSITY_LEVEL {
     VERBOSITY_DEBUG,
@@ -17,8 +20,18 @@ enum VERBOSITY_LEVEL {
     VERBOSITY_ERROR
 };
 
+static const char* verbosity_strings[] = { "Debug", "Info", "Warning", "Error" };
+
+
+
+
+void change_verbosity(enum VERBOSITY_LEVEL verbosity);
+
+
+
+
 void init_log(UART_HandleTypeDef *huart);
 
-void send_log(enum VERBOSITY_LEVEL, const char *message);
+void send_log(enum VERBOSITY_LEVEL, const char *message, ...);
 
 #endif /* SRC_LOG_MANAGER_H_ */

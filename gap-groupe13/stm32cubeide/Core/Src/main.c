@@ -101,6 +101,8 @@ int main(void)
   init_mpu(&hi2c1);
   send_log(VERBOSITY_INFO, "GAP system booted");
 
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

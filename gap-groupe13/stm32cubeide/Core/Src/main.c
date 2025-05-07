@@ -46,7 +46,6 @@ UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-gapcom_handle_t *gapcom_handle_instance;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,7 +98,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   create_gapcom_instance(&huart6);
   init_log(&huart2);
+  init_mpu(&hi2c1);
   send_log(VERBOSITY_INFO, "GAP system booted");
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,7 +110,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //HAL_UART_Transmit(&huart2, (uint8_t*)"hello", 5, HAL_MAX_DELAY);
+	  read_fifo();
+	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -209,7 +211,7 @@ static void MX_USART2_UART_Init(void)
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.Mode = UART_MODE_TX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
@@ -291,15 +293,11 @@ static void MX_GPIO_Init(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART6) {
-		receive_gapcom_incoming_uart_message(rx_buff, 1);
+		gapcom_uart_fsm_rx_callback();
 	}
 
 }
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-
-}
 
 /* USER CODE END 4 */
 

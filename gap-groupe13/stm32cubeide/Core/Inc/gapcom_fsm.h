@@ -13,6 +13,7 @@
 
 #define GAPCOM_HEADER_SIZE 9    // Calculé : 1 (SOF) + 4 (ID) + 2 (LEN) + 2 (TYPE) + 2 (HEAD_CRC)
 #define GAPCOM_CRC_SIZE    2     // CRC16 = 2 octets
+#define GAPCOM_CRC_FOOTER_SIZE    2     // CRC16 = 2 octets
 
 
 typedef enum {

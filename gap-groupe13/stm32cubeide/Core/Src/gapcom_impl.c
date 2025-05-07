@@ -13,17 +13,25 @@ static gapcom_handle_t *gapcom_handle_instance;
 
 int close_sender(gapcom_sender_t *self)
 {
+	if (self == NULL)
+		return -1;
 	return 0;
 }
 
 int open_sender(gapcom_sender_t *self)
 {
+	if (self == NULL)
+		return -1;
 	return 0;
 }
 
 ssize_t send_sender(gapcom_sender_t *self, const uint8_t *buf, size_t len)
 {
-	HAL_StatusTypeDef status = HAL_UART_Transmit_IT(huart2_handle, buf, len);
+	if (self == NULL)
+	{
+		return -1;
+	}
+	HAL_StatusTypeDef status = HAL_UART_Transmit_IT(huart2_handle, buf, (uint16_t)len);
     if (status == HAL_OK) {
         return (ssize_t)len;
     } else {
@@ -43,12 +51,7 @@ void create_gapcom_instance(UART_HandleTypeDef *handle)
 	gapcom_set_sender_impl(gapcom_handle_instance, &gapcom_sender_t_impl);
 	gapcom_install_callback(gapcom_handle_instance, cmd_ping_callback, GAPCOM_MSG_MIN);
 	gapcom_install_callback(gapcom_handle_instance, cmd_setverbosity_callback, GAPCOM_MSG_SET_LOG_VERBOSITY_REQ);
+	gapcom_install_callback(gapcom_handle_instance, cmd_setgyroscope_callback, GAPCOM_MSG_SET_GYROSCOPE_REQ);
 	gapcom_uart_fsm_init(huart2_handle, gapcom_handle_instance);
-}
-
-void receive_gapcom_incoming_uart_message(uint8_t *buf, uint16_t size)
-{
-    gapcom_uart_fsm_rx_callback();
-
 }
 

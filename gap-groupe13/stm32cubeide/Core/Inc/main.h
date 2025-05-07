@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "gapcom_impl.h"
 #include "log_manager.h"
+#include "selftest.h"
 #include "gapcom_fsm.h"
 #include "mpu60x0.h"
 /* USER CODE END Includes */

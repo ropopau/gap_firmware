@@ -156,9 +156,9 @@ void read_fifo() {
 
     char buf[64];
     sprintf(buf, "%c%05d %c%05d %c%05d\r\n",
-        (x < 0 ? '-' : 'X'), abs(x),
-        (y < 0 ? '-' : 'Y'), abs(y),
-        (z < 0 ? '-' : 'Z'), abs(z)
+        (x < 0 ? '-X' : 'X'), abs(x),
+        (y < 0 ? '-Y' : 'Y'), abs(y),
+        (z < 0 ? '-Z' : 'Z'), abs(z)
     );
     send_log(VERBOSITY_INFO, buf);
 

@@ -114,7 +114,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  read_fifo();
-	  HAL_Delay(1000);
+	  HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }

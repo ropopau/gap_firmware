@@ -155,12 +155,10 @@ void read_fifo() {
     int16_t z = (int16_t)((data[4] << 8) | data[5]);
 
     char buf[64];
-    sprintf(buf, "%c%05d %c%05d %c%05d\r\n",
-        (x < 0 ? '-X' : 'X'), abs(x),
-        (y < 0 ? '-Y' : 'Y'), abs(y),
-        (z < 0 ? '-Z' : 'Z'), abs(z)
+    sprintf(buf, "%s%05d %s%05d %s%05d\r\n",
+        (x < 0 ? "-X" : "X"), abs(x),
+        (y < 0 ? "-Y" : "Y"), abs(y),
+        (z < 0 ? "-Z" : "Z"), abs(z)
     );
     send_log(VERBOSITY_INFO, buf);
-
-    HAL_Delay(50);
 }

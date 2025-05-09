@@ -13,15 +13,16 @@
 #include "main.h"
 
 #define MPU6050_ADDR (0x68 << 1)
-#define MPU6050_PWR_MGMT_1 0x6B
-#define MPU6050_SMPLRT_DIV 0x19
+#define PWR_MGMT_1 0x6B
+#define SMPLRT_DIV 0x19
 #define CONFIG_REG 0x1A
 #define FIFO_EN_REG 0x23
 #define USER_CTRL_REG 0x6A
 #define WAIT_WRITE_MPU_TIME 1000
 #define FIFO_R_W_REG 0x74
 #define FIFO_COUNTH_REG 0x72
-#define MPU6050_I2C_MASTER 0x24
+#define I2C_MASTER 0x24
+#define INT_ENABLE 0x38
 
 void init_mpu(I2C_HandleTypeDef *I2C_handler);
 
@@ -30,6 +31,8 @@ void set_gyroscope();
 void unset_gyroscope();
 
 void read_fifo();
+
+void mpu_interrupt();
 
 
 #endif /* SRC_MPU60X0_H_ */

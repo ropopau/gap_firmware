@@ -16,7 +16,7 @@ void init_mpu(I2C_HandleTypeDef *I2C_handler)
 	I2C_handler_instance = I2C_handler;
 	//RESET MPU
 	uint8_t reset = 0x80;
-	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
+	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
 	HAL_Delay(200);
 }
 
@@ -30,7 +30,7 @@ void unset_gyroscope()
 	set_gyroscope_d = false;
 	//RESET MPU
 	uint8_t reset = 0x80;
-	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
+	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
 }
 
 HAL_StatusTypeDef config_mpu() {
@@ -41,7 +41,7 @@ HAL_StatusTypeDef config_mpu() {
 
     // Wake up
     data = 0x01;
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to wake up device");
         return status;
@@ -50,29 +50,11 @@ HAL_StatusTypeDef config_mpu() {
 
     // Set sample rate to 100Hz (1kHz / (1+49))
     data = 49;
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to set sample rate");
         return status;
     }
-    HAL_Delay(WAIT_WRITE_MPU_TIME);
-
-    // Set FIFO_EN to gyro bits
-    data = 0x70;
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, FIFO_EN_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to enable gyro FIFO");
-        return status;
-    }
-
-    // Enable FIFO operation
-    data = 0x40;
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
-    if (status != HAL_OK) {
-        send_log(VERBOSITY_ERROR, "Failed to enable FIFO operation");
-        return status;
-    }
-
     HAL_Delay(WAIT_WRITE_MPU_TIME);
 
     // Set DLPF_CFG to 3 (42Hz bandwidth)
@@ -85,11 +67,38 @@ HAL_StatusTypeDef config_mpu() {
 
     // Disable I2C master mode
     data = 0x00;
-    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, MPU6050_I2C_MASTER, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, I2C_MASTER, 1, &data, 1, WAIT_WRITE_MPU_TIME);
     if (status != HAL_OK) {
         send_log(VERBOSITY_ERROR, "Failed to disable I2C master mode");
         return status;
     }
+
+    HAL_Delay(WAIT_WRITE_MPU_TIME);
+
+    // Enable FIFO operation
+    data = 0x40;
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, USER_CTRL_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK) {
+        send_log(VERBOSITY_ERROR, "Failed to enable FIFO operation");
+        return status;
+    }
+
+    // Set Interrupt enable on FIFO OVERFLOW
+    data = 0x10;
+    status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, INT_ENABLE, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK) {
+    	send_log(VERBOSITY_ERROR, "Failed enable int interrupt");
+    }
+
+    HAL_Delay(WAIT_WRITE_MPU_TIME);
+
+    // Set FIFO_EN to gyro bits
+   data = 0x70;
+   status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, FIFO_EN_REG, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+   if (status != HAL_OK) {
+	   send_log(VERBOSITY_ERROR, "Failed to enable gyro FIFO");
+	   return status;
+   }
 
     send_log(VERBOSITY_INFO, "MPU6050 FIFO configured successfully");
     is_active = true;
@@ -106,7 +115,6 @@ void read_fifo() {
         set_gyroscope_d = false;
         return;
     }
-
     if (!is_active) {
         return;
     }
@@ -161,4 +169,18 @@ void read_fifo() {
         (z < 0 ? "-Z" : "Z"), abs(z)
     );
     send_log(VERBOSITY_INFO, buf);
+}
+
+static int nth_interrupt = 0;
+
+void mpu_interrupt()
+{
+	send_log(VERBOSITY_ERROR, "FIFO full, be careful !");
+	nth_interrupt += 1;
+	if (nth_interrupt >= 5)
+	{
+		send_log(VERBOSITY_ERROR, "FIFO was fulled 5 times, gyroscope unset...");
+		unset_gyroscope();
+		nth_interrupt = 0;
+	}
 }

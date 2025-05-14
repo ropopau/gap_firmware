@@ -20,15 +20,12 @@ enum VERBOSITY_LEVEL {
     VERBOSITY_ERROR
 };
 
-static const char* verbosity_strings[] = { "Debug", "Info", "Warning", "Error" };
 
 
-
+void disable_debug_uart();
+void enable_debug_uart();
 
 void change_verbosity(enum VERBOSITY_LEVEL verbosity);
-
-
-
 
 void init_log(UART_HandleTypeDef *huart);
 

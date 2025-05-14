@@ -30,7 +30,18 @@ void set_gyroscope();
 
 void unset_gyroscope();
 
+void configure_for_selftest();
+
+bool validate_selftest_x(int16_t X_axis);
+
+bool validate_selftest_y(int16_t Y_axis);
+
+bool validate_selftest_z(int16_t Z_axis);
+
+
 void read_fifo();
+
+void switch_sampling_rate();
 
 void mpu_interrupt();
 

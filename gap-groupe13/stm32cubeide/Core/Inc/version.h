@@ -10,15 +10,18 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdbool.h>
+#include <ctype.h>
+
+#include "utils/flash.h"
 #include "log_manager.h"
 
 
-#define VERSION_SIZE 16
+#define VERSION_SIZE GAPSetVersionReq_size
 
+bool is_valid_version(const char* version);
 
-void get_version(uint8_t *buffer);
+void get_version(char *buffer);
 
-void set_version(const uint8_t *new_version);
+bool set_version(const char *new_version);
 
 #endif // SRC_VERSION_H

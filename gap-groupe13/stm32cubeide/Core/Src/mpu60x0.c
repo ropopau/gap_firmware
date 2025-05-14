@@ -10,6 +10,7 @@
 static I2C_HandleTypeDef *I2C_handler_instance;
 static bool is_active = false;
 static bool set_gyroscope_d = false;
+static bool is_powersaving = false;
 
 void init_mpu(I2C_HandleTypeDef *I2C_handler)
 {
@@ -33,7 +34,30 @@ void unset_gyroscope()
 	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
 }
 
-HAL_StatusTypeDef config_mpu() {
+void configure_for_selftest() {
+	return;
+}
+
+bool validate_selftest_x(int16_t X_axis) {
+	X_axis = X_axis;
+	return true;
+}
+
+bool validate_selftest_y(int16_t Y_axis) {
+	Y_axis = Y_axis;
+	return true;
+}
+
+bool validate_selftest_z(int16_t Z_axis) {
+	Z_axis = Z_axis;
+	return true;
+}
+
+
+
+
+
+static HAL_StatusTypeDef config_mpu() {
     uint8_t data;
     HAL_StatusTypeDef status;
 
@@ -172,6 +196,31 @@ void read_fifo() {
 }
 
 static int nth_interrupt = 0;
+
+void switch_sampling_rate() {
+	uint8_t data;
+	HAL_StatusTypeDef status;
+
+	if (!is_powersaving) {
+		is_powersaving = true;
+		// Set sample rate to 5Hz (1kHz / (1+199))
+		data = 199;
+	}
+	else {
+		is_powersaving = false;
+		// Set sample rate to 20Hz (1kHz / (1+49))
+		data = 49;
+	}
+
+	status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+	if (status != HAL_OK) {
+		send_log(VERBOSITY_ERROR, "Failed to set sample rate");
+		return;
+	}
+	HAL_Delay(WAIT_WRITE_MPU_TIME);
+}
+
+
 
 void mpu_interrupt()
 {

@@ -36,7 +36,8 @@ ssize_t send_sender(gapcom_sender_t *self, const uint8_t *buf, size_t len)
         return (ssize_t)len;
     } else {
         return -1;
-    }}
+    }
+}
 
 gapcom_sender_t gapcom_sender_t_impl = {
 		.close = close_sender,
@@ -55,6 +56,7 @@ void create_gapcom_instance(UART_HandleTypeDef *handle)
 	gapcom_install_callback(gapcom_handle_instance, cmd_setversion_callback, GAPCOM_MSG_SET_VERSION_REQ);
 	gapcom_install_callback(gapcom_handle_instance, cmd_getversion_callback, GAPCOM_MSG_GET_VERSION_REQ);
 	gapcom_install_callback(gapcom_handle_instance, cmd_selftest_callback, GAPCOM_MSG_SELFTEST_REQ);
+	gapcom_install_callback(gapcom_handle_instance, cmd_powersavemode_callback, GAPCOM_MSG_POWER_SAVE_MODE_REQ);
 
 
 	gapcom_install_callback(gapcom_handle_instance, cmd_setgyroscope_callback, GAPCOM_MSG_SET_GYROSCOPE_REQ);

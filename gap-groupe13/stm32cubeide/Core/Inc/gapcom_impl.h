@@ -16,7 +16,7 @@
 #include "gapcli_cmd_callback.h"
 #include "main.h"
 
-void create_gapcom_instance(UART_HandleTypeDef *huart2_handle);
+void create_gapcom_instance(UART_HandleTypeDef *handle);
 
 
 #endif /* SRC_GAPCOM_IMPL_H_ */

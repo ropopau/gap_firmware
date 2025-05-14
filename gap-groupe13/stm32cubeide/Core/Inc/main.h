@@ -55,7 +55,9 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-
+void LED_On(void);
+void LED_Off(void);
+HAL_StatusTypeDef uart_init(const UART_HandleTypeDef *huart);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

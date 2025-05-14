@@ -1,9 +1,10 @@
-/*
- * gapcom_impl.h
- *
- *  Created on: Apr 24, 2025
- *      Author: valentin
- */
+/**
+  ******************************************************************************
+  * @file    gapcom_impl.h
+  * @author  Group 13
+  * @brief   Header for gapcom_impl.c file.
+  ******************************************************************************
+  */
 
 #ifndef SRC_GAPCOM_IMPL_H_
 #define SRC_GAPCOM_IMPL_H_
@@ -16,6 +17,7 @@
 #include "gapcli_cmd_callback.h"
 #include "main.h"
 
+/* Exported functions prototypes ---------------------------------------------*/
 void create_gapcom_instance(UART_HandleTypeDef *handle);
 
 

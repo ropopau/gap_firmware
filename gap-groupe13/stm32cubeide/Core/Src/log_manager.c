@@ -1,60 +1,44 @@
-/*
- * log_manager.c
- *
- *  Created on: Apr 25, 2025
- *      Author: valentin
- */
+/**
+  ******************************************************************************
+  * @file    log_manager.c
+  * @author  Group 13
+  * @brief   Managing logging through the debug uart.
+  *
+  ******************************************************************************
+  */
 
 #include "log_manager.h"
 
+// Pointer to the uart2 handler
+static UART_HandleTypeDef *huart_handler;
 
-UART_HandleTypeDef *huart_handler;
-
+// Final log message buffer
 static char buf[1024];
+
+// Current global verbosity level
 static enum VERBOSITY_LEVEL current_verbosity = VERBOSITY_INFO;
+
+// Each verbosity level strings
 static const char* verbosity_strings[] = { "Debug", "Info", "Warning", "Error" };
 
 
-
+/**
+  * @brief  Initialized the uart handler with the debug uart (uart2)
+  *
+  * @param  UART_HandleTypeDef *huart	debug uart handler
+  * @retval None
+  */
 void init_log(UART_HandleTypeDef *huart)
 {
 	huart_handler = huart;
 }
 
-
-void disable_debug_uart() {
-	HAL_NVIC_DisableIRQ(USART2_IRQn);
-	//HAL_UART_abort(huart_handler);
-
-	HAL_UART_DeInit(huart_handler);
-
-	__HAL_RCC_USART2_CLK_DISABLE();
-}
-
-void enable_debug_uart() {
-	__HAL_RCC_USART2_CLK_ENABLE();
-
-	huart_handler->Instance = USART2;
-	huart_handler->Init.BaudRate = 115200;
-	huart_handler->Init.WordLength = UART_WORDLENGTH_8B;
-	huart_handler->Init.StopBits = UART_STOPBITS_1;
-	huart_handler->Init.Parity = UART_PARITY_NONE;
-	huart_handler->Init.Mode = UART_MODE_TX;
-	huart_handler->Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart_handler->Init.OverSampling = UART_OVERSAMPLING_16;
-
-	HAL_NVIC_EnableIRQ(USART2_IRQn);
-
-	if (HAL_UART_Init(huart_handler) != HAL_OK)
-	{
-		Error_Handler();
-	}
-}
-
-
-
-
-
+/**
+  * @brief  Change log verbosity level
+  *
+  * @param  enum VERBOSITY_LEVEL verbosity	new verbosity to set.
+  * @retval None
+  */
 void change_verbosity(enum VERBOSITY_LEVEL verbosity) {
 
 	if (current_verbosity == verbosity){
@@ -62,12 +46,18 @@ void change_verbosity(enum VERBOSITY_LEVEL verbosity) {
 	}
 	else{
 		current_verbosity = verbosity;
-
 	}
-
 }
 
-
+/**
+  * @brief  Send a log using debug uart. It use a blocking transmit.
+  * 		Variadic function.
+  *
+  * @param  enum VERBOSITY_LEVEL verbosity	verbosity level of the log.
+  * @param 	const char *message		message to send.
+  * @param	... 	argument to format
+  * @retval None
+  */
 void send_log(enum VERBOSITY_LEVEL verbosity, const char *message, ...)
 {
 	// current -> Info, error -> alors il fait rien

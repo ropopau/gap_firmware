@@ -1,13 +1,21 @@
-/*
- * flash.c
- *
- *  Created on: May 14, 2025
- *      Author: sanghyeon
- */
+/**
+  ******************************************************************************
+  * @file    flash.c
+  * @author  Group 13
+  * @brief   This file manage flash manipulation.
+  *
+  *
+  ******************************************************************************
+  */
 
 #include "utils/flash.h"
 
-
+/**
+  * @brief  Erase a given flash sector.
+  *
+  * @param  uint32_t sector	Sector to rease
+  * @retval true if success, false else.
+  */
 bool flash_erase_sector(uint32_t sector) {
 
     HAL_FLASH_Unlock();
@@ -30,6 +38,15 @@ bool flash_erase_sector(uint32_t sector) {
     return true;
 }
 
+/**
+  * @brief  Write data
+  *
+  * @param  uint32_t *address	address where the data should be written.
+  * @param  const void *data	data to write.
+  * @param  uint32_t size	size of the data to write.
+  *
+  * @retval true if success, false else.
+  */
 bool flash_write_data(uint32_t *address, const void *data, uint32_t size) {
 	HAL_FLASH_Unlock();
 
@@ -51,6 +68,15 @@ bool flash_write_data(uint32_t *address, const void *data, uint32_t size) {
     return true;
 }
 
+/**
+  * @brief  read data
+  *
+  * @param  uint32_t address	address where the data to read is stored.
+  * @param  void *data	Data buffer: the read data is stored at this address.
+  * @param  uint32_t size	size of the data to read.
+  *
+  * @retval always true.
+  */
 bool flash_read_data(uint32_t address, void *data, uint32_t size) {
     memcpy(data, (void*)address, size);
     return true;

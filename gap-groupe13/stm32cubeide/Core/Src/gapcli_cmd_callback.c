@@ -1,18 +1,41 @@
-/*
- * gapclicmdcallback.c
- *
- *  Created on: Apr 24, 2025
- *      Author: valentin
- */
+/**
+  ******************************************************************************
+  * @file    gapcli_cmd_callback.c
+  * @author  Group 13
+  * @brief   This file define every callbacks that will be used by gapcom.
+  *
+  * - Every callback triggered whenever gapcom receives a valid request.
+  *
+  * - If powersaving is enabled, every callback will do nothing
+  * except for the power-save-mode request
+  *
+  ******************************************************************************
+  */
 
 #include "gapcli_cmd_callback.h"
 
+// Tracking powersaving.
 static bool is_powersaving = false;
 
+
+/**
+  * @brief  Function that toggle powersaving mode.
+  * if powersaving is true, every callback is ignored except the power-save-mode request's one.
+  *
+  * @param  None
+  * @retval None
+  */
 void cmd_toggle_powersave_mode() {
 	is_powersaving = !is_powersaving;
 }
 
+/**
+  * @brief  ping callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	empty
+  * @retval None
+  */
 void cmd_ping_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
@@ -21,6 +44,13 @@ void cmd_ping_callback(gapcom_handle_t *handle, const void *proto_msg)
 	gapcom_respond_ping(handle, GAPErrorCode_GAP_OK);
 }
 
+/**
+  * @brief  set-log-verbosity callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	verbosity level
+  * @retval None
+  */
 void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	GAPErrorCode error_code = GAPErrorCode_GAP_OK;
@@ -42,6 +72,13 @@ void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg)
 	gapcom_respond_set_log_verbosity(handle, error_code);
 }
 
+/**
+  * @brief  set-version callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	new version to set
+  * @retval None
+  */
 void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	GAPErrorCode error_code = GAPErrorCode_GAP_OK;
@@ -63,6 +100,13 @@ void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 }
 
+/**
+  * @brief  get-version callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	empty
+  * @retval None
+  */
 void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
@@ -78,7 +122,13 @@ void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 }
 
-
+/**
+  * @brief  selftest callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	empty
+  * @retval None
+  */
 void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
@@ -95,7 +145,13 @@ void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
 	show_tap_output();
 }
 
-
+/**
+  * @brief  power-save-mode callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	enter or exit
+  * @retval None
+  */
 void cmd_powersavemode_callback(gapcom_handle_t *handle, const void *proto_msg) {
 
 	send_log(VERBOSITY_INFO, "powersavemode request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
@@ -108,7 +164,13 @@ void cmd_powersavemode_callback(gapcom_handle_t *handle, const void *proto_msg) 
 }
 
 
-
+/**
+  * @brief  set-gyroscope callback
+  *
+  * @param  gapcom_handle_t *handle		gapcom handler
+  * @param  const void *proto_msg 	on or off
+  * @retval None
+  */
 void cmd_setgyroscope_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)

@@ -1,53 +1,68 @@
-/*
- * selftest.c
- *
- *  Created on: May 7, 2025
- *      Author: sanghyeon
- */
+/**
+  ******************************************************************************
+  * @file    selftest.c
+  * @author  Group 13
+  * @brief   Selftest for flash, debug uart, gyroscope and leds
+  *
+  ******************************************************************************
+  */
 
 #include "selftest.h"
 
+// Pointer to the uart2 handler
 static UART_HandleTypeDef *huart_handler;
 
 
+/*
+ * Static array for the final TAP output.
+ */
 static const char* top_delimiter = "============= TAP Output START ===============\r\n";
 static const char* tap_version = "TAP version 14\r\n";
+
+// Adapt when you are adding a test.
 static const char* tap_tests_count = "1..4\r\n";
-
 static const char* bottom_delimiter = "============= TAP Output END =================\r\n";
-
 static char tap_flash_test_result[256];
 static char tap_debug_uart_test_result[256];
 static char tap_gyroscope_test_result[256];
 static char tap_leds_test_result[256];
 
+
+/**
+  * @brief  Initialized the uart handler with the debug uart (uart2)
+  *
+  * @param  UART_HandleTypeDef *huart	debug uart handler
+  * @retval None
+  */
 void init_test(UART_HandleTypeDef *huart)
 {
 	huart_handler = huart;
 }
 
-
+/**
+  * @brief  Send the TAP final output.
+  *
+  * @param  None
+  * @retval None
+  */
 void show_tap_output() {
 	HAL_UART_Transmit(huart_handler, (uint8_t*)top_delimiter, (uint16_t)strlen(top_delimiter), HAL_MAX_DELAY);
-
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_version, (uint16_t)strlen(tap_version), HAL_MAX_DELAY);
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_tests_count, (uint16_t)strlen(tap_tests_count), HAL_MAX_DELAY);
-
-
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_flash_test_result, (uint16_t)strlen(tap_flash_test_result), HAL_MAX_DELAY);
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_debug_uart_test_result, (uint16_t)strlen(tap_debug_uart_test_result), HAL_MAX_DELAY);
-
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_gyroscope_test_result, (uint16_t)strlen(tap_gyroscope_test_result), HAL_MAX_DELAY);
-
 	HAL_UART_Transmit(huart_handler, (uint8_t*)tap_leds_test_result, (uint16_t)strlen(tap_leds_test_result), HAL_MAX_DELAY);
-
-
 	HAL_UART_Transmit(huart_handler, (uint8_t*)bottom_delimiter, (uint16_t)strlen(bottom_delimiter), HAL_MAX_DELAY);
-
-
 }
 
 
+/**
+  * @brief 	Send a message and wait for an input (y/n only)
+  *
+  * @param  const char *ask_msg		message to send before waiting for the input.
+  * @retval return true if y, n else.
+  */
 static int _ask_user(const char *ask_msg) {
 	uint8_t response;
 	HAL_UART_Transmit(huart_handler, (uint8_t*)ask_msg, (uint16_t)strlen(ask_msg), HAL_MAX_DELAY);
@@ -68,6 +83,16 @@ static int _ask_user(const char *ask_msg) {
 
 
 }
+
+
+/**
+ * ADD HERE THE TESTS YOU SHOULD RUN WHEN SELFTEST REQUEST RECEIVED.
+ *
+ * test_flash_access
+ * test_uart_log_verbosity
+ * test_gyroscope
+ * test_leds
+ */
 
 GAPSelftestCode test_flash_access() {
 

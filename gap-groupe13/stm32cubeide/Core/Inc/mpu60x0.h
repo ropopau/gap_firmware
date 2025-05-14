@@ -1,9 +1,10 @@
-/*
- * mpu60x0.h
- *
- *  Created on: Apr 25, 2025
- *      Author: valentin
- */
+/**
+  ******************************************************************************
+  * @file    mpu60x0.h
+  * @author  Group 13
+  * @brief   Header for mpu60x0.c file.
+  ******************************************************************************
+  */
 
 #ifndef SRC_MPU60X0_H_
 #define SRC_MPU60X0_H_
@@ -12,6 +13,10 @@
 #include <stdlib.h>
 #include "main.h"
 
+/*
+ *
+ * @brief	Please look at the mpu60x0's datasheet.
+ */
 #define MPU6050_ADDR (0x68 << 1)
 #define PWR_MGMT_1 0x6B
 #define SMPLRT_DIV 0x19
@@ -24,25 +29,17 @@
 #define I2C_MASTER 0x24
 #define INT_ENABLE 0x38
 
+
+/* Exported functions prototypes ---------------------------------------------*/
 void init_mpu(I2C_HandleTypeDef *I2C_handler);
-
 void set_gyroscope();
-
 void unset_gyroscope();
-
 void configure_for_selftest();
-
 bool validate_selftest_x(int16_t X_axis);
-
 bool validate_selftest_y(int16_t Y_axis);
-
 bool validate_selftest_z(int16_t Z_axis);
-
-
 void read_fifo();
-
 void switch_sampling_rate();
-
 void mpu_interrupt();
 
 

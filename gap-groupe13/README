@@ -38,6 +38,8 @@ Le système GAP utilise les fonctions fournies par la librairie **libgapcom**.
 
 ### Compromis et limitations
 
+- Certains WARNINGs peuvent être présents dans les fichiers générés par l'IDE. En revanche, il n'y a aucun avertissement dans les fichiers que nous avons écrits.
+
 - La carte Nucleo présente certaines limitations par rapport à l'autre carte. Elle ne dispose pas de l'UART7, nous avons donc utilisé l'UART6 pour la console de contrôle. Il en va de même pour les LED : une seule est disponible et utilisable.
 
 - Le versioning suit la syntaxe **SemVer**, mais uniquement au format : **Major.Minor.Patch**. Les métadonnées optionnelles ne sont pas gérées (pour l’instant).  

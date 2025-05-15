@@ -12,6 +12,12 @@ static bool is_active = false;
 static bool set_gyroscope_d = false;
 static bool is_powersaving = false;
 
+/**
+  * @brief  Initialized mpu60x0.c
+  *
+  * @param  I2C_HandleTypeDef *I2C_handler i2c Handler
+  * @retval None
+  */
 void init_mpu(I2C_HandleTypeDef *I2C_handler)
 {
 	I2C_handler_instance = I2C_handler;
@@ -21,11 +27,24 @@ void init_mpu(I2C_HandleTypeDef *I2C_handler)
 	HAL_Delay(200);
 }
 
+/**
+  * @brief  Set gyroscope
+  *
+  * @param  None
+  * @retval None
+  */
 void set_gyroscope()
 {
 	set_gyroscope_d = true;
 }
 
+
+/**
+  * @brief  Unset gyroscope (disable reading + reset mpu)
+  *
+  * @param  None
+  * @retval None
+  */
 void unset_gyroscope()
 {
 	set_gyroscope_d = false;
@@ -34,6 +53,12 @@ void unset_gyroscope()
 	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
 }
 
+/**
+  * @brief  Configure selftest
+  *
+  * @param  None
+  * @retval None
+  */
 void configure_for_selftest() {
 	return;
 }
@@ -53,10 +78,12 @@ bool validate_selftest_z(int16_t Z_axis) {
 	return true;
 }
 
-
-
-
-
+/**
+  * @brief  Configure MPU (Wake Up, DLPF, Set Sample Rate, Enable FIFO, Enable Interrupt...)
+  *
+  * @param  None
+  * @retval HAL_StatusTypeDef
+  */
 static HAL_StatusTypeDef config_mpu() {
     uint8_t data;
     HAL_StatusTypeDef status;
@@ -132,7 +159,12 @@ static HAL_StatusTypeDef config_mpu() {
     return HAL_OK;
 }
 
-
+/**
+  * @brief  Read fifo if set gyroscope is enabled
+  *
+  * @param  None
+  * @retval None
+  */
 void read_fifo() {
     if (set_gyroscope_d) {
         config_mpu();
@@ -197,6 +229,12 @@ void read_fifo() {
 
 static int nth_interrupt = 0;
 
+/**
+  * @brief  Switch Sample Rate to 5 Hz
+  *
+  * @param  None
+  * @retval None
+  */
 void switch_sampling_rate() {
 	uint8_t data;
 	HAL_StatusTypeDef status;
@@ -221,7 +259,12 @@ void switch_sampling_rate() {
 }
 
 
-
+/**
+  * @brief  MPU interrupt, called when FIFO is full
+  *
+  * @param  None
+  * @retval None
+  */
 void mpu_interrupt()
 {
 	send_log(VERBOSITY_ERROR, "FIFO full, be careful !");

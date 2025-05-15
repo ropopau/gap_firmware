@@ -24,6 +24,8 @@
 
 Version de Stm32cubeIDE: **6.14.1**
 
+Board: **Nucleo stm32f401ret6**
+
 ### Détails d'implémentation
 
 Le système GAP utilise les fonctions fournies par la librairie **libgapcom**.

@@ -96,6 +96,7 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  uart_set_handler(&huart2, &huart6);
   create_gapcom_instance(&huart6);
   init_test(&huart2);
   init_log(&huart2);
@@ -214,7 +215,7 @@ static void MX_USART2_UART_Init(void)
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX;
+  huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
@@ -303,6 +304,30 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void LED_On(void) {
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+}
+
+void LED_Off(void) {
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+}
+
+HAL_StatusTypeDef uart_init(const UART_HandleTypeDef *huart) {
+    if (huart == NULL) return HAL_ERROR;
+
+    switch ((uint32_t)huart->Instance) {
+        case USART2_BASE:
+            MX_USART2_UART_Init();
+            return HAL_OK;
+        case USART6_BASE:
+            MX_USART6_UART_Init();
+            return HAL_OK;
+        default:
+            return HAL_ERROR;
+    }
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART6) {

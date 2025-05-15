@@ -22,6 +22,8 @@
 
 ## Description technique
 
+Version de Stm32cubeIDE: **6.14.1**
+
 ### Détails d'implémentation
 
 Le système GAP utilise les fonctions fournies par la librairie **libgapcom**.

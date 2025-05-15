@@ -18,11 +18,7 @@
 **/*.d
 **/*.su
 **/*.cyclo
-**/*.launch
 **/*.settings
-**/*.project
-**/*.cproject
-**/*.mxproject
 
 **/*.uvguix.*
 **/*.uvoptx

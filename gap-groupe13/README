@@ -44,7 +44,7 @@ Le système GAP utilise les fonctions fournies par la librairie **libgapcom**.
 
 - Le versioning suit la syntaxe **SemVer**, mais uniquement au format : **Major.Minor.Patch**. Les métadonnées optionnelles ne sont pas gérées (pour l’instant).  
 
-- **Le mode veille ne reduit pas la Sysclock**. Aussi, la désactivation de l'uart2 semble ne pas toujours fonctionner.
+- **Le mode veille ne réduit pas la Sysclock**. Aussi, la désactivation de l'uart (`uart.c`) est commentée pour l'instant car il peut casser tout le système par moment.
 
 - Les callbacks sont dans un contexte d’interruption, y compris pour le selftest. Or, le selftest du gyroscope a besoin d’un `HAL_Delay` (inutilisable dans un contexte d’interruption). C’est pourquoi ce dernier n’a pas pu être implémenté.
 

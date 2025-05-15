@@ -26,7 +26,6 @@ GAPSelftestCode test_flash_access();
 GAPSelftestCode test_uart_log_verbosity();
 GAPSelftestCode test_gyroscope();
 GAPSelftestCode test_leds();
-void start_selftest();
 
 
 #endif // SRC_SELFTEST_H

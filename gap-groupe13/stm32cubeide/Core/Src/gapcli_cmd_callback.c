@@ -147,6 +147,7 @@ void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
 
 	GAPSelftestCode flash_res = test_flash_access();
 	GAPSelftestCode debuguart_res = test_uart_log_verbosity();
+	change_verbosity(VERBOSITY_INFO);
 	GAPSelftestCode gyroscope_res = test_gyroscope();
 	GAPSelftestCode leds_res = test_leds();
 

@@ -156,7 +156,6 @@ GAPSelftestCode test_uart_log_verbosity() {
 	}
 
 	strcpy(tap_debug_uart_test_result, "ok 2 - UART verbosity levels\r\n");
-
 	return GAPSelftestCode_GAP_SELFTEST_OK;
 
 }

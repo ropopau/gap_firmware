@@ -51,7 +51,9 @@ void uart_enable(enum UartTypes huart_type) {
 	}
 	send_log(VERBOSITY_INFO, "Enabling %s ", uart_infos.name);
 
-	HAL_UART_Init(uart_infos.handler);
+	// TODO this line of code sometime blocks everything.
+	//HAL_UART_Init(uart_infos.handler);
+
 	uart_infos.state = UART_STATE_ENABLED;
 
 }
@@ -70,7 +72,11 @@ void uart_disable(enum UartTypes huart_type) {
 		return;
 	}
 	send_log(VERBOSITY_INFO, "Disabling %s ", uart_infos.name);
-	HAL_UART_DeInit(uart_infos.handler);
+
+	// TODO this line of code sometime blocks everything.
+	//HAL_UART_DeInit(uart_infos.handler);
+
+
 	uart_infos.state = UART_STATE_DISABLED;
 }
 

@@ -163,7 +163,8 @@ GAPSelftestCode test_uart_log_verbosity() {
 
 
 GAPSelftestCode test_gyroscope() {
-	send_log(VERBOSITY_INFO, "Gyroscope selftest not implemented");
+	strcpy(tap_gyroscope_test_result, "not ok 3 - Gyroscope selftest not implemented\r\n");
+
 	return GAPSelftestCode_GAP_SELFTEST_OK;
 }
 

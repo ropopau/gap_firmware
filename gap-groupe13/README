@@ -1,0 +1,42 @@
+# Projet ARM - GAP (Groupe 13)
+
+## Membres de l'équipe
+- Sanghyeon PARK  
+- Valentin GIBBE
+
+## Paliers réalisés
+### Paliers de base
+- [X] Palier 0 - Mise en place de l'environnement  
+- [X] Palier 1 - Console de contrôle  
+- [X] Palier 2 - Logs par UART  
+- [X] Palier 3 - Support du gyroscope  
+
+### Paliers supplémentaires
+- [X] Palier A - Stockage de la version logicielle  
+- [X] Palier B - Mr Propre  
+- [X] Palier C - Selftest **(sauf gyroscope)**  
+- [X] Palier D - Le seau déborde  
+- [X] Palier E - Mode veille **(partiellement)**  
+- [ ] Palier F - Clignotants  
+- [ ] Palier G - Guide du développeur  
+
+## Description technique
+
+### Détails d'implémentation
+
+Le système GAP utilise les fonctions fournies par la librairie **libgapcom**.
+
+- La réception et le parsing des requêtes se font dans une machine à états définie dans le fichier `gapcom_fsm.c`. Il y a l’état `FSM_HEADER` qui lit l’en-tête (SOF, ID, LEN, TYPE, HEAD_CRC), puis l’état `FSM_PAYLOAD` qui lit le proto-message.
+
+- Les callbacks (toute la logique amenant le système à répondre à la requête) sont installés via Gapcom. C’est également Gapcom qui s’occupe d’appeler le bon callback à la réception de la requête correspondante.
+
+- La version est stockée dans la zone mémoire `.version` définie dans le fichier `STM32F401RETX_FLASH.ld`. Elle est située à la toute fin de la mémoire flash utilisable, avec une taille de 16 octets. Le mot-clé `NOLOAD` évite à cette zone mémoire d’être chargée et swipée à chaque fois qu’on flash la board.
+
+### Compromis et limitations
+
+- Le versioning suit la syntaxe **SemVer**, mais uniquement au format : **Major.Minor.Patch**. Les métadonnées optionnelles ne sont pas gérées (pour l’instant).  
+
+- **Le mode veille ne reduit pas la Sysclock**. Aussi, la désactivation de l'uart2 semble ne pas toujours fonctionner.
+
+- Les callbacks sont dans un contexte d’interruption, y compris pour le selftest. Or, le selftest du gyroscope a besoin d’un `HAL_Delay` (inutilisable dans un contexte d’interruption). C’est pourquoi ce dernier n’a pas pu être implémenté.
+

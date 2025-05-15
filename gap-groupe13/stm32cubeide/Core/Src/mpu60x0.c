@@ -227,6 +227,9 @@ static int nth_interrupt = 0;
   * @retval None
   */
 void switch_sampling_rate() {
+	if (!set_gyroscope_d)
+		return;
+
 	uint8_t data;
 	HAL_StatusTypeDef status;
 

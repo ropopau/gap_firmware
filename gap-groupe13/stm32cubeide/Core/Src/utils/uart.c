@@ -70,8 +70,6 @@ void uart_disable(enum UartTypes huart_type) {
 		return;
 	}
 	send_log(VERBOSITY_INFO, "Disabling %s ", uart_infos.name);
-
-
 	HAL_UART_DeInit(uart_infos.handler);
 	uart_infos.state = UART_STATE_DISABLED;
 }

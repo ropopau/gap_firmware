@@ -1,9 +1,19 @@
-/*
- * mpu60x0.c
- *
- *  Created on: Apr 25, 2025
- *      Author: valentin
- */
+/**
+  ******************************************************************************
+  * @file    mpu60x0.c
+  * @author  Group 13
+  * @brief   This file defines all supports functions for mpu
+  *
+  * - init mpu, set and unset reading gyroscope
+  *
+  * - Callback called by interrupt
+  *
+  * - SelfTest
+  *
+  * -Read FIFO
+  *
+  ******************************************************************************
+  */
 
 #include "mpu60x0.h"
 
@@ -23,7 +33,10 @@ void init_mpu(I2C_HandleTypeDef *I2C_handler)
 	I2C_handler_instance = I2C_handler;
 	//RESET MPU
 	uint8_t reset = 0x80;
-	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK) {
+        send_log(VERBOSITY_ERROR, "Failed to init mpu");
+    }
 	HAL_Delay(200);
 }
 
@@ -50,32 +63,10 @@ void unset_gyroscope()
 	set_gyroscope_d = false;
 	//RESET MPU
 	uint8_t reset = 0x80;
-	HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
-}
-
-/**
-  * @brief  Configure selftest
-  *
-  * @param  None
-  * @retval None
-  */
-void configure_for_selftest() {
-	return;
-}
-
-bool validate_selftest_x(int16_t X_axis) {
-	X_axis = X_axis;
-	return true;
-}
-
-bool validate_selftest_y(int16_t Y_axis) {
-	Y_axis = Y_axis;
-	return true;
-}
-
-bool validate_selftest_z(int16_t Z_axis) {
-	Z_axis = Z_axis;
-	return true;
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, PWR_MGMT_1, 1, &reset, 1, WAIT_WRITE_MPU_TIME);
+    if (status != HAL_OK) {
+        send_log(VERBOSITY_ERROR, "Failed to unset gyroscope");
+    }
 }
 
 /**
@@ -255,7 +246,6 @@ void switch_sampling_rate() {
 		send_log(VERBOSITY_ERROR, "Failed to set sample rate");
 		return;
 	}
-	HAL_Delay(WAIT_WRITE_MPU_TIME);
 }
 
 

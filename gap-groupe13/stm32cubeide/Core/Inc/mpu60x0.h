@@ -28,16 +28,13 @@
 #define FIFO_COUNTH_REG 0x72
 #define I2C_MASTER 0x24
 #define INT_ENABLE 0x38
-
+#define GYRO_CONFIG 0x1B
+#define GYRO_XOUT_H 0x43
 
 /* Exported functions prototypes ---------------------------------------------*/
 void init_mpu(I2C_HandleTypeDef *I2C_handler);
 void set_gyroscope();
 void unset_gyroscope();
-void configure_for_selftest();
-bool validate_selftest_x(int16_t X_axis);
-bool validate_selftest_y(int16_t Y_axis);
-bool validate_selftest_z(int16_t Z_axis);
 void read_fifo();
 void switch_sampling_rate();
 void mpu_interrupt();

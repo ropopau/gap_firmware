@@ -14,6 +14,12 @@ static char header_buf[11];
 static char payload_buf[1024];
 static uint16_t expected_payload_size = 0;
 
+/**
+  * @brief  Init State Machine of our trame parser
+  *
+  * @param  UART_HandleTypeDef *huart, gapcom_handle_t *gapcom_handle
+  * @retval None
+  */
 void gapcom_uart_fsm_init(UART_HandleTypeDef *huart, gapcom_handle_t *gapcom_handle)
 {
 	 gapcom_handle_instance = gapcom_handle;
@@ -22,6 +28,12 @@ void gapcom_uart_fsm_init(UART_HandleTypeDef *huart, gapcom_handle_t *gapcom_han
 	 HAL_UART_Receive_IT(gapcom_uart, (uint8_t*)header_buf, GAPCOM_HEADER_SIZE);
 }
 
+/**
+  * @brief  Callback of interrupt of UART_RX, It's the heart of machine state
+  *
+  * @param  None
+  * @retval None
+  */
 void gapcom_uart_fsm_rx_callback()
 {
 	if (fsm_state == FSM_HEADER)

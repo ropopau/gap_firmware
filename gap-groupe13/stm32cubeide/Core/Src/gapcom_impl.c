@@ -25,6 +25,14 @@ int open_sender(gapcom_sender_t *self)
 	return 0;
 }
 
+/**
+  * @brief  Function for send message to gapcli
+  *
+  * @param  gapcom_sender_t *self
+  * @param  const uint8_t *buf
+  * @param  size_t len
+  * @retval ssize_t sizze of the message, -1 if failed
+  */
 ssize_t send_sender(gapcom_sender_t *self, const uint8_t *buf, size_t len)
 {
 	if (self == NULL)
@@ -45,6 +53,12 @@ gapcom_sender_t gapcom_sender_t_impl = {
 		.send = send_sender
 };
 
+/**
+  * @brief  Create Gapcom instance and install all callbacks
+  *
+  * @param  UART_HandleTypeDef *handle
+  * @retval None
+  */
 void create_gapcom_instance(UART_HandleTypeDef *handle)
 {
 	huart2_handle = handle;

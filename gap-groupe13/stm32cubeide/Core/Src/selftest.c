@@ -163,27 +163,8 @@ GAPSelftestCode test_uart_log_verbosity() {
 
 
 GAPSelftestCode test_gyroscope() {
-
-	unset_gyroscope();
-	//Configure the mpu6050 for selftest mode
-	configure_for_selftest();
-
-	if (!validate_selftest_x(0)) {
-		strcpy(tap_gyroscope_test_result, "not ok 3 - Gyroscope X axis does not work properly\r\n");
-		return GAPSelftestCode_GAP_SELFTEST_GYROSCOPE_X_NOK;
-	}
-	if (!validate_selftest_y(0)) {
-		strcpy(tap_gyroscope_test_result, "not ok 3 - Gyroscope Y axis does not work properly\r\n");
-		return GAPSelftestCode_GAP_SELFTEST_GYROSCOPE_Y_NOK;
-	}
-	if (!validate_selftest_z(0)) {
-		strcpy(tap_gyroscope_test_result, "not ok 3 - Gyroscope Z axis does not work properly\r\n");
-		return GAPSelftestCode_GAP_SELFTEST_GYROSCOPE_Z_NOK;
-	}
-
-	strcpy(tap_gyroscope_test_result, "ok 3 - MPU60X0 gyroscope\r\n");
+	send_log(VERBOSITY_INFO, "Gyroscope selftest not implemented");
 	return GAPSelftestCode_GAP_SELFTEST_OK;
-
 }
 
 

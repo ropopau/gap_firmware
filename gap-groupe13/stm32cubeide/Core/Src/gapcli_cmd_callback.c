@@ -40,7 +40,9 @@ void cmd_ping_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
 		return;
-	send_log(VERBOSITY_INFO, "ping request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	if (proto_msg == NULL)
+		send_log(VERBOSITY_ERROR, "Error of proto msg");
+	send_log(VERBOSITY_INFO, "ping request received");
 	gapcom_respond_ping(handle, GAPErrorCode_GAP_OK);
 }
 
@@ -56,7 +58,9 @@ void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg)
 	GAPErrorCode error_code = GAPErrorCode_GAP_OK;
 	if (is_powersaving)
 		return;
-	send_log(VERBOSITY_INFO, "set-log-verbosity request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	if (proto_msg == NULL)
+		send_log(VERBOSITY_ERROR, "Error of proto msg");
+	send_log(VERBOSITY_INFO, "set-log-verbosity request received");
 
 	enum VERBOSITY_LEVEL new_log_level = *(enum VERBOSITY_LEVEL *)proto_msg;
 
@@ -84,7 +88,9 @@ void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 	GAPErrorCode error_code = GAPErrorCode_GAP_OK;
 	if (is_powersaving)
 		return;
-	send_log(VERBOSITY_INFO, "set-version request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	if (proto_msg == NULL)
+		send_log(VERBOSITY_ERROR, "Error of proto msg");
+	send_log(VERBOSITY_INFO, "set-version request received");
 
 	const char *new_version = (const char *) proto_msg;
 
@@ -111,7 +117,9 @@ void cmd_getversion_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
 		return;
-	send_log(VERBOSITY_INFO, "get-version request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	if (proto_msg == NULL)
+		send_log(VERBOSITY_ERROR, "Error of proto msg");
+	send_log(VERBOSITY_INFO, "get-version request received");
 	char version[16];
 
 
@@ -133,7 +141,9 @@ void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
 {
 	if (is_powersaving)
 		return;
-	send_log(VERBOSITY_INFO, "selftest request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	if (proto_msg == NULL)
+		send_log(VERBOSITY_ERROR, "Error of proto msg");
+	send_log(VERBOSITY_INFO, "selftest request received");
 
 	GAPSelftestCode flash_res = test_flash_access();
 	GAPSelftestCode debuguart_res = test_uart_log_verbosity();
@@ -154,7 +164,7 @@ void cmd_selftest_callback(gapcom_handle_t *handle, const void *proto_msg)
   */
 void cmd_powersavemode_callback(gapcom_handle_t *handle, const void *proto_msg) {
 
-	send_log(VERBOSITY_INFO, "powersavemode request received. proto_msg is (casted into char *): %s", (char *)proto_msg);
+	send_log(VERBOSITY_INFO, "powersavemode request received");
 
 	enum POWERSAVE_REQ power_save_mode_type = *(enum POWERSAVE_REQ *)proto_msg;
 

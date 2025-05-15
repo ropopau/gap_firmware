@@ -19,15 +19,28 @@ static bool is_powersaving = false;
 
 
 /**
-  * @brief  Function that toggle powersaving mode.
+  * @brief  Function that enable powersaving mode.
   * if powersaving is true, every callback is ignored except the power-save-mode request's one.
   *
   * @param  None
   * @retval None
   */
-void cmd_toggle_powersave_mode() {
-	is_powersaving = !is_powersaving;
+void cmd_enable_powersave_mode() {
+	is_powersaving = true;
 }
+
+/**
+  * @brief  Function that disable powersaving mode.
+  * if powersaving is true, every callback is ignored except the power-save-mode request's one.
+  *
+  * @param  None
+  * @retval None
+  */
+void cmd_disable_powersave_mode() {
+	is_powersaving = false;
+}
+
+
 
 /**
   * @brief  ping callback

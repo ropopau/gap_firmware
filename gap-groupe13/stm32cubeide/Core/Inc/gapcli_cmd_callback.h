@@ -23,7 +23,9 @@
 
 
 /* Exported functions prototypes ---------------------------------------------*/
-void cmd_toggle_powersave_mode();
+
+void cmd_enable_powersave_mode();
+void cmd_disable_powersave_mode();
 void cmd_ping_callback(gapcom_handle_t *handle, const void *proto_msg);
 void cmd_setverbosity_callback(gapcom_handle_t *handle, const void *proto_msg);
 void cmd_setversion_callback(gapcom_handle_t *handle, const void *proto_msg);

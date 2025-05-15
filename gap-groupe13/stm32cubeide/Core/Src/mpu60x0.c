@@ -220,29 +220,37 @@ void read_fifo() {
 
 static int nth_interrupt = 0;
 
-/**
-  * @brief  Switch Sample Rate to 5 Hz
-  *
-  * @param  None
-  * @retval None
-  */
-void switch_sampling_rate() {
+
+void mpu_disable_power_save_mode() {
 	if (!set_gyroscope_d)
 		return;
 
 	uint8_t data;
 	HAL_StatusTypeDef status;
 
-	if (!is_powersaving) {
-		is_powersaving = true;
-		// Set sample rate to 5Hz (1kHz / (1+199))
-		data = 199;
+	is_powersaving = true;
+	// Set sample rate to 5Hz (1kHz / (1+199))
+	data = 199;
+
+
+	status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
+	if (status != HAL_OK) {
+		send_log(VERBOSITY_ERROR, "Failed to set sample rate");
+		return;
 	}
-	else {
-		is_powersaving = false;
-		// Set sample rate to 20Hz (1kHz / (1+49))
-		data = 49;
-	}
+}
+
+void mpu_enable_power_save_mode(){
+	if (!set_gyroscope_d)
+		return;
+
+	uint8_t data;
+	HAL_StatusTypeDef status;
+
+	is_powersaving = false;
+	// Set sample rate to 20Hz (1kHz / (1+49))
+	data = 49;
+
 
 	status = HAL_I2C_Mem_Write(I2C_handler_instance, MPU6050_ADDR, SMPLRT_DIV, 1, &data, 1, WAIT_WRITE_MPU_TIME);
 	if (status != HAL_OK) {

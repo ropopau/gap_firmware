@@ -36,7 +36,8 @@ void init_mpu(I2C_HandleTypeDef *I2C_handler);
 void set_gyroscope();
 void unset_gyroscope();
 void read_fifo();
-void switch_sampling_rate();
+void mpu_disable_power_save_mode();
+void mpu_enable_power_save_mode();
 void mpu_interrupt();
 
 

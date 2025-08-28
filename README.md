@@ -1,24 +1,8 @@
-# ARM Project – GAP (Group 13)
+# GAB Firmware
 
-## Team Members
+## Group members
 - Sanghyeon PARK (ropopau)
 - Valentin GIBBE
-
-## Achieved Milestones
-### Basic Milestones
-- [X] Milestone 0 – Environment setup  
-- [X] Milestone 1 – Control console  
-- [X] Milestone 2 – UART logging  
-- [X] Milestone 3 – Gyroscope support  
-
-### Additional Milestones
-- [X] Milestone A – Software version storage  
-- [X] Milestone B – Mr. Clean  
-- [X] Milestone C – Self-test **(except gyroscope)**  
-- [X] Milestone D – Overflowing bucket  
-- [X] Milestone E – Sleep mode **(partially)**  
-- [ ] Milestone F – Turn signals  
-- [ ] Milestone G – Developer guide  
 
 ## Technical Description
 

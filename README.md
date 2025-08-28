@@ -1,4 +1,4 @@
-# GAB Firmware
+# GAP Firmware
 
 ## Group members
 - Sanghyeon PARK (ropopau)
